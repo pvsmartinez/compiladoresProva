@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 
 module ReservedWorlds
-  NOP = 1
-  READ = 2
-  LOAD = 3
-  ADD = 4
-  PRINT = 5
-  INSTRUCTION = 6
-  DATA = 7
-  RESULT = 8
+  NOP = 'nop'
+  READ = 'read'
+  LOAD = 'load'
+  ADD = 'add'
+  PRINT = 'print'
+  INSTRUCTION = 'instruction'
+  DATA = 'data'
+  RESULT = 'result'
 end
 
 module TokenKind

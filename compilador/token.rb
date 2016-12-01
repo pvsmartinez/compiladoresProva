@@ -3,8 +3,13 @@
 require_relative 'constants'
 
 class Token
+
+  attr_reader :value
+  attr_reader :kind
+
   def initialize(value)
     @value = value
+    setKind value
   end
 
   def setKind(value)
@@ -25,6 +30,15 @@ class Token
       @kind = TokenKind::TYPE_REGISTER
     when ReservedWorlds::RESULT
       @kind = TokenKind::TYPE_REGISTER
+    else
+      if value.match /^[A-Za-z]/
+        @kind = TokenKind::TYPE_LABEL
+      elsif value.match /(:|!|^$)/
+        @kind = TokenKind::TYPE_EXPECIAL_CHAR
+      else
+        @kind = TokenKind::TYPE_NUM
+      end
     end
   end
+
 end
