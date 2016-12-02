@@ -54,7 +54,7 @@ class Sintatico
   def updateTerm(tokens)
     if @@termList.nil? || @@termList.empty?
       @@token = tokens.shift
-      if @@token.isReservedWord
+      if @@token.is_reserved_word?
         @@term = @@token.value == '' ? 'EOL' : @@token.value
         @@termList = nil
       else

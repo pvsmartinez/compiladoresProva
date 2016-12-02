@@ -6,42 +6,63 @@ class Token
 
   attr_reader :value
   attr_reader :kind
+  attr_reader :opcode
 
   def initialize(value)
     @value = value
-    setKind value
+    set_kind_and_opcode value
   end
 
-  def setKind(value)
+  def set_kind_and_opcode(value)
     case value
-    when ReservedWorlds::NOP
-      @kind = TokenKind::TYPE_OPERATOR_NO_EXP
-    when ReservedWorlds::READ || ReservedWorlds::PRINT
-      @kind = TokenKind::TYPE_OPERATOR_ONE_EXP
-    when ReservedWorlds::LOAD || ReservedWorlds::ADD
-      @kind = TokenKind::TYPE_OPERATOR_TWO_EXP
-    when ReservedWorlds::INSTRUCTION || ReservedWorlds::DATA || ReservedWorlds::RESULT
-      @kind = TokenKind::TYPE_REGISTER
+    when "nop"
+      @opcode = 0
+      @kind = :TYPE_OPERATOR_NO_EXP
+
+    when "read"
+      @opcode = 1
+      @kind = :TYPE_OPERATOR_ONE_EXP
+
+    when "load"
+      @opcode = 2
+      @kind = :TYPE_OPERATOR_TWO_EXP
+
+    when "add"
+      @opcode = 3
+      @kind = :TYPE_OPERATOR_TWO_EXP
+
+    when "print"
+      @kind = :TYPE_OPERATOR_ONE_EXP
+      @opcode = 4
+
+    when "instruction"
+      @kind = :TYPE_REGISTER
+      @opcode = 32
+
+    when "data"
+      @kind = :TYPE_REGISTER
+      @opcode = 34
+
+    when "result"
+      @kind = :TYPE_REGISTER
+      @opcode = 36
+
+    when /[a-zA-Z]*/
+      @kind = :TYPE_LABEL
+
+    when /[0-9]*/
+      @kind = :TYPE_NUM
+
+    when "!" || ":"
+      @kind = :TYPE_SPECIAL_CHARACTER
+
     else
-      if value.match /^[A-Za-z]/
-        @kind = TokenKind::TYPE_LABEL
-      elsif value.match /(:|!|^$)/
-        @kind = TokenKind::TYPE_EXPECIAL_CHAR
-      elsif value.match /^[0-9]/
-        @kind = TokenKind::TYPE_NUM
-      else
-        puts 'some error with the tokens - lexico'
-      end
+      puts '>> Error: Token not valid!'
     end
   end
 
-  def getTerm
-    return @value[0] if !isReservedWord
-    return @value == '' ? 'EOL' : @value
-  end
-
-  def isReservedWord
-    return @kind != TokenKind::TYPE_LABEL && @kind != TokenKind::TYPE_NUM
+  def is_reserved_word?
+    return @kind != :TYPE_LABEL && @kind != :TYPE_NUM
   end
 
 end
