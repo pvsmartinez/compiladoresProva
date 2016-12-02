@@ -27,10 +27,21 @@ class Token
         @kind = TokenKind::TYPE_LABEL
       elsif value.match /(:|!|^$)/
         @kind = TokenKind::TYPE_EXPECIAL_CHAR
-      else
+      elsif value.match /^[0-9]/
         @kind = TokenKind::TYPE_NUM
+      else
+        puts 'some error with the tokens - lexico'
       end
     end
+  end
+
+  def getTerm
+    return @value[0] if !isReservedWord
+    return @value == '' ? 'EOL' : @value
+  end
+
+  def isReservedWord
+    return @kind != TokenKind::TYPE_LABEL && @kind != TokenKind::TYPE_NUM
   end
 
 end

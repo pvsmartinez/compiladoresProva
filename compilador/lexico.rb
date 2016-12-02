@@ -26,10 +26,6 @@ class Lexico
       @tokens.push Token.new('') #adiciona o token EOL
     end
 
-    @tokens.each do | token |
-      puts token.value + '::' + token.kind.to_s
-    end
-
   end
 
 end

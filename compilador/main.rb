@@ -5,7 +5,7 @@ require_relative 'sintatico'
 
 def initCompiler(file = "./programa.txt")
   lexico = Lexico.new file
-  sintatico = Sintatico.new "compilador/wirth.txt"
+  sintatico = Sintatico.new(lexico.tokens,"compilador/automatos.txt")
 end
 
 initCompiler
