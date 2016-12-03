@@ -16,50 +16,113 @@ class Sintatico
 
     @lexico = lexico
     @automata_stack = [] #Array com os automatos
+    @subautomatas_terminals = {}
     create_automatas_from_file "compilador/automatos.txt"
     start_syntactic_analysis
   end
 
   def start_syntactic_analysis()
     push_automata @automatas.values[0].name
+    # current_state_subautomatas_terminals
+    # puts @subautomatas_terminals
 
     @lexico.tokens.each do |token|
-      # puts token.lexeme
-      # puts current_automata.inspect
+      @was_token_consumed = false
+
       next_state(token)
+
     end
   end
 
   private
 
   def next_state(token)
+    puts 'token: ' + token.lexeme
+    puts '--------'
+    # puts 'token.lexme: ' + token.lexeme
+    # puts 'token.type: ' + token.type.to_s
+    # puts current_automata.inspect
+    # puts 'current_state_terminals: ' + current_state_terminals.to_s
+    # puts 'current_state_nonterminals: ' + current_state_nonterminals.to_s
+    # puts current_state_subautomatas_terminals
 
     if current_state_terminals.include? token.lexeme
       change_state token.lexeme
+      @was_token_consumed = true
+      return
 
-    elsif current_state_terminals.include? token.type
-      change_state token.type
+    elsif current_state_terminals.include? token.type.to_s
+      change_state token.type.to_s
+      @was_token_consumed = true
+      return
 
-    else
-      current_automata.subautomatas_terminals.each do |automata, terminals|
-        if terminals.include?(token.lexeme) || terminals.include?(token.type)
+    elsif (!current_state_terminals.empty? || !current_state_nonterminals.empty?) && (current_state_subautomatas_terminals.values.flatten(1).include?(token.lexeme) ||  current_state_subautomatas_terminals.values.flatten(1).include?(token.type.to_s))
+
+      current_state_subautomatas_terminals.each do |automata, terminals|
+        if terminals.include?(token.lexeme) || terminals.include?(token.type.to_s)
           change_state automata
           push_automata(automata, token)
           return
         end
       end
-    end
 
-    if current_automata.final_states.include? current_automata.current_state
+    elsif current_automata.final_states.include? current_automata.current_state
       pop_automata()
+      next_state(token) if !@was_token_consumed
+      return
+    end
+  end
 
+  def current_state_subautomatas_terminals
+    @subautomatas_terminals = {}
+    get_current_state_subautomatas_terminals
+    @subautomatas_terminals
+  end
+
+  # Pega todos os terminais que podem ser atingido pelo estado da maquina presente
+  def get_current_state_subautomatas_terminals
+    if current_state_nonterminals.length > 0
+      current_state_nonterminals.each do |child_automata|
+        @subautomatas_terminals[child_automata] = [] if @subautomatas_terminals[child_automata].nil?
+        get_subautomata_terminals(child_automata) if @automatas[child_automata].subautomatas_terminals.keys.flatten(1).empty?
+        @subautomatas_terminals[child_automata].concat(@automatas[child_automata].terminals)
+        @subautomatas_terminals[child_automata].concat(@automatas[child_automata].subautomatas_terminals.values.flatten(1))
+
+        @subautomatas_terminals[child_automata] = @subautomatas_terminals[child_automata].uniq
+      end
+    end
+  end
+
+  # Pega todos os terminais que podem ser atingido por uma maquina
+  def get_subautomata_terminals(automata_name)
+    if @automatas[automata_name].nonterminals.length > 0
+      @automatas[automata_name].nonterminals.each do |child_automata|
+        @automatas[automata_name].subautomatas_terminals[child_automata] = [] if @automatas[automata_name].subautomatas_terminals[child_automata].nil?
+        get_subautomata_terminals(child_automata) if @automatas[child_automata].subautomatas_terminals.keys.flatten(1).empty?
+        @automatas[automata_name].subautomatas_terminals[child_automata].concat(@automatas[child_automata].terminals)
+        @automatas[automata_name].subautomatas_terminals[child_automata].concat(@automatas[child_automata].subautomatas_terminals.values.flatten(1))
+
+        @automatas[automata_name].subautomatas_terminals[child_automata] = @automatas[automata_name].subautomatas_terminals[child_automata].uniq
+      end
     end
   end
 
   def current_state_terminals
-    terminals =  []
-    current_automata.transitions[current_automata.current_state].keys.each do |key|
-      terminals << key if is_terminal?(key)
+    terminals = []
+    if !current_automata.transitions[current_automata.current_state].nil?
+      current_automata.transitions[current_automata.current_state].keys.each do |key|
+        terminals << key if is_terminal?(key)
+      end
+    end
+    return terminals
+  end
+
+  def current_state_nonterminals
+    terminals = []
+    if !current_automata.transitions[current_automata.current_state].nil?
+      current_automata.transitions[current_automata.current_state].keys.each do |key|
+        terminals << key unless is_terminal?(key)
+      end
     end
     return terminals
   end
@@ -125,31 +188,6 @@ class Sintatico
         elsif !is_terminal?(sanitized_line[1])
           @automatas[automata_name].nonterminals << sanitized_line[1] unless @automatas[automata_name].nonterminals.include? sanitized_line[1]
         end
-      end
-    end
-
-    @automatas.values.each do |automata|
-      # puts ''
-      # puts automata.inspect
-    end
-
-    # guardando todos os nao-terminais que podem ser acessados por cada uma dos automatos alcancados
-    get_submachine_terminals(@automatas.keys[0])
-
-  end
-
-  def get_submachine_terminals(automata_name)
-    if @automatas[automata_name].nonterminals.length > 0
-      @automatas[automata_name].nonterminals.each do |child_automata|
-        @automatas[automata_name].subautomatas_terminals[child_automata] = [] if @automatas[automata_name].subautomatas_terminals[child_automata].nil?
-        get_submachine_terminals(child_automata) if @automatas[child_automata].subautomatas_terminals.keys.flatten(1).empty?
-        @automatas[automata_name].subautomatas_terminals[child_automata].concat(@automatas[child_automata].terminals)
-        @automatas[automata_name].subautomatas_terminals[child_automata].concat(@automatas[child_automata].subautomatas_terminals.values.flatten(1))
-
-        @automatas[automata_name].subautomatas_terminals[child_automata] = @automatas[automata_name].subautomatas_terminals[child_automata].uniq
-
-        puts ''
-        puts @automatas[automata_name].inspect
       end
     end
   end

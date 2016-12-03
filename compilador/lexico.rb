@@ -28,23 +28,23 @@ class Lexico
 
         if word.match /(:)$/
           @labels[word[0..-2]] = base_address + @tokens.length
-          puts ' (r) token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[0..-2] + ')'
+          puts ' (r) token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[0..-2] + ')'
           @tokens << Token.new(word[0..-2])
-          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[-1] + ')'
+          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[-1] + ')'
           @tokens << Token.new(word[-1])
 
         elsif word.match /(!)$/
-          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[0..-2] + ')'
+          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[0..-2] + ')'
           @tokens << Token.new(word[0..-2])
-          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[-1] + ')'
+          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[-1] + ')'
           @tokens << Token.new(word[-1])
 
         else
-          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word + ')'
+          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word + ')'
           @tokens << Token.new(word)
         end
       end
-      puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: EOL)'
+      puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: EOL)'
       @tokens << Token.new("EOL")
     end
 

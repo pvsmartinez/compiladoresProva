@@ -47,14 +47,17 @@ class Token
       @type = :TYPE_REGISTER
       @opcode = 36
 
-    when /[a-zA-Z]*/
-      @type = :TYPE_LABEL
+    when "EOL"
+      @type = :TYPE_EOL
 
-    when /[0-9]*/
+    when /^[0-9]+/
       @type = :TYPE_NUM
 
     when "!" || ":"
       @type = :TYPE_SPECIAL_CHARACTER
+
+    when /[a-zA-Z]+/
+      @type = :TYPE_LABEL
 
     else
       puts '>> Error: Token not valid!'
