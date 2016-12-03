@@ -37,8 +37,8 @@ class Sintatico
   private
 
   def next_state(token)
-    puts 'token: ' + token.lexeme
-    puts '--------'
+    # puts 'token: ' + token.lexeme
+    # puts '--------'
     # puts 'token.lexme: ' + token.lexeme
     # puts 'token.type: ' + token.type.to_s
     # puts current_automata.inspect
@@ -47,11 +47,13 @@ class Sintatico
     # puts current_state_subautomatas_terminals
 
     if current_state_terminals.include? token.lexeme
+      puts '    token: [' + token.lexeme + ']'
       change_state token.lexeme
       @was_token_consumed = true
       return
 
     elsif current_state_terminals.include? token.type.to_s
+      puts '    token: [' + token.lexeme + ']'
       change_state token.type.to_s
       @was_token_consumed = true
       return
@@ -60,15 +62,18 @@ class Sintatico
 
       current_state_subautomatas_terminals.each do |automata, terminals|
         if terminals.include?(token.lexeme) || terminals.include?(token.type.to_s)
+          puts '    token: [' + token.lexeme + ']'
+
           change_state automata
-          push_automata(automata, token)
+          push_automata automata
+          next_state token
           return
         end
       end
 
     elsif current_automata.final_states.include? current_automata.current_state
       pop_automata()
-      next_state(token) if !@was_token_consumed
+      next_state token if !@was_token_consumed
       return
     end
   end
@@ -130,30 +135,27 @@ class Sintatico
   def change_state(input)
     last_state = current_automata.current_state
     current_automata.current_state = current_automata.transitions[current_automata.current_state][input]
-    puts current_automata.name + ': (' + last_state + ', ' + input + ') -> ' + current_automata.current_state
+    puts '    ' + current_automata.name + ': (' + last_state + ', ' + input + ') -> ' + current_automata.current_state
+    puts ''
   end
 
   def current_automata
     @automata_stack.last
   end
 
-  def push_automata(automata_name, token = nil)
+  def push_automata(automata_name)
     last_automata = current_automata.name unless current_automata.nil?
     @automata_stack << @automatas[automata_name].clone
-    # current_automata.current_state = @automatas[automata_name].initial_state
     puts ''
-    puts 'Entrando submaquina: ' +  current_automata.name if last_automata.nil?
-    puts 'Entrando submaquina: ' + last_automata + ' ~> ' + current_automata.name unless last_automata.nil?
+    puts 'Entrada de submaquina: [' +  current_automata.name + ']' if last_automata.nil?
+    puts 'Entrada de submaquina: [' + last_automata + ' ~> ' + current_automata.name + ']' unless last_automata.nil?
     puts ''
-    next_state(token) unless token.nil?
-
   end
 
   def pop_automata()
-    last_automata = current_automata.name
-    @automata_stack.pop
+    popped_automata = @automata_stack.pop
     puts ''
-    puts 'Saindo submaquina: ' + last_automata + ' ~> ' + current_automata.name
+    puts 'Saida de submaquina: [' + popped_automata.name + ' ~> ' + current_automata.name + ']'
     puts ''
   end
 
