@@ -25,26 +25,27 @@ class Lexico
       words = line.split ' '
 
       words.each do | word | #cria cada token
+
         if word.match /(:)$/
           @labels[word[0..-2]] = base_address + @tokens.length
           puts ' (r) token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[0..-2] + ')'
-          @tokens.push Token.new(word[0..-2])
+          @tokens << Token.new(word[0..-2])
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[-1] + ')'
-          @tokens.push Token.new(word[-1])
+          @tokens << Token.new(word[-1])
 
         elsif word.match /(!)$/
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[0..-2] + ')'
-          @tokens.push Token.new(word[0..-2])
+          @tokens << Token.new(word[0..-2])
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word[-1] + ')'
-          @tokens.push Token.new(word[-1])
-
+          @tokens << Token.new(word[-1])
 
         else
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: ' + word + ')'
-          @tokens.push Token.new(word)
+          @tokens << Token.new(word)
         end
       end
-      puts ''
+      puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', name: EOL)'
+      @tokens << Token.new("EOL")
     end
 
     puts 'Foram identificados [' + @tokens.length.to_s + '] tokens, entre eles [' + @labels.length.to_s + '] rotulos: '

@@ -1,38 +1,38 @@
-automato: PROG
+automato: _PROG
 initial: 0
 final: 1
-(0, INST) -> 1
-(1, INST) -> 1
----
-automato: INST
+(0, _INST) -> 1
+(1, _INST) -> 1
+
+automato: _INST
 initial: 0
 final: 3
-(0, OPERATION) -> 1
-(0, LABEL) -> 2
+(0, _OPERATION) -> 1
+(0, TYPE_LABEL) -> 2
 (1, "EOL") -> 3
 (2, ":") -> 4
-(2, EXP) -> 1
+(2, _EXP) -> 1
 (2, "EOL") -> 3
-(4, EXP) -> 1
+(4, _EXP) -> 1
 (4, "EOL") -> 3
----
-automato: OPERATION
+
+automato: _OPERATION
 initial: 0
 final: 1, 2, 3
-(0, OPERATOR) -> 1
-(1, EXP) -> 2
-(2, EXP) -> 3
----
-automato: EXP
+(0, _OPERATOR) -> 1
+(1, _EXP) -> 2
+(2, _EXP) -> 3
+
+automato: _EXP
 initial: 0
 final: 1, 2
-(0, OPERATION) -> 1
-(0, REGISTER) -> 2
-(0, LABEL) -> 2
-(0, NUM) -> 1
+(0, _OPERATION) -> 1
+(0, _REGISTER) -> 2
+(0, TYPE_LABEL) -> 2
+(0, TYPE_NUM) -> 1
 (2, "!") -> 1
----
-automato: OPERATOR
+
+automato: _OPERATOR
 initial: 0
 final: 1
 (0, "nop") -> 1
@@ -40,94 +40,10 @@ final: 1
 (0, "load") -> 1
 (0, "add") -> 1
 (0, "print") -> 1
----
-automato: REGISTER
+
+automato: _REGISTER
 initial: 0
 final: 1
 (0, "instruction") -> 1
 (0, "data") -> 1
 (0, "result") -> 1
----
-automato: LABEL
-initial: 0
-final: 1
-(0, LET) -> 1
-(1, LET) -> 1
-(1, DIG) -> 1
----
-automato: NUM
-initial: 0
-final: 1
-(0, DIG) -> 1
-(1, DIG) -> 1
----
-automato: DIG
-initial: 0
-final: 1
-(0, "0") -> 1
-(0, "1") -> 1
-(0, "2") -> 1
-(0, "3") -> 1
-(0, "4") -> 1
-(0, "5") -> 1
-(0, "6") -> 1
-(0, "7") -> 1
-(0, "8") -> 1
-(0, "9") -> 1
----
-automato: LET
-initial: 0
-final: 1
-(0, "A") -> 1
-(0, "B") -> 1
-(0, "C") -> 1
-(0, "D") -> 1
-(0, "E") -> 1
-(0, "F") -> 1
-(0, "G") -> 1
-(0, "H") -> 1
-(0, "I") -> 1
-(0, "J") -> 1
-(0, "K") -> 1
-(0, "L") -> 1
-(0, "M") -> 1
-(0, "N") -> 1
-(0, "O") -> 1
-(0, "P") -> 1
-(0, "Q") -> 1
-(0, "R") -> 1
-(0, "S") -> 1
-(0, "T") -> 1
-(0, "U") -> 1
-(0, "V") -> 1
-(0, "W") -> 1
-(0, "X") -> 1
-(0, "Y") -> 1
-(0, "Z") -> 1
-(0, "a") -> 1
-(0, "b") -> 1
-(0, "c") -> 1
-(0, "d") -> 1
-(0, "e") -> 1
-(0, "f") -> 1
-(0, "g") -> 1
-(0, "h") -> 1
-(0, "i") -> 1
-(0, "j") -> 1
-(0, "k") -> 1
-(0, "l") -> 1
-(0, "m") -> 1
-(0, "n") -> 1
-(0, "o") -> 1
-(0, "p") -> 1
-(0, "q") -> 1
-(0, "r") -> 1
-(0, "s") -> 1
-(0, "t") -> 1
-(0, "u") -> 1
-(0, "v") -> 1
-(0, "w") -> 1
-(0, "x") -> 1
-(0, "y") -> 1
-(0, "z") -> 1
----

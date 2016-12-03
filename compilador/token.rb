@@ -4,17 +4,17 @@ require_relative 'constants'
 
 class Token
 
-  attr_reader :value
+  attr_reader :lexeme
   attr_reader :kind
   attr_reader :opcode
 
-  def initialize(value)
-    @value = value
-    set_kind_and_opcode value
+  def initialize(lexeme)
+    @lexeme = lexeme
+    set_kind_and_opcode lexeme
   end
 
-  def set_kind_and_opcode(value)
-    case value
+  def set_kind_and_opcode(lexeme)
+    case lexeme
     when "nop"
       @opcode = 0
       @kind = :TYPE_OPERATOR_NO_EXP
