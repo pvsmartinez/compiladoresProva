@@ -21,8 +21,8 @@ class Automata
     @subautomatas_terminals = {}
   end
 
-  def add_transition(state, machine_or_terminal, next_state)
+  def add_transition(state, input, next_state)
     @transitions[state] = {} if @transitions[state].nil?
-    @transitions[state][machine_or_terminal] = next_state
+    @transitions[state][input] = next_state
   end
 end

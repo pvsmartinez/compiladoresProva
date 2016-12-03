@@ -10,10 +10,10 @@ final: 3
 (0, _OPERATION) -> 1
 (0, TYPE_LABEL) -> 2
 (1, "EOL") -> 3
+(2, TYPE_LABEL) -> 1
 (2, ":") -> 4
-(2, _EXP) -> 1
 (2, "EOL") -> 3
-(4, _EXP) -> 1
+(4, TYPE_NUM) -> 1
 (4, "EOL") -> 3
 
 automato: _OPERATION
@@ -27,7 +27,7 @@ automato: _EXP
 initial: 0
 final: 1, 2
 (0, _OPERATION) -> 1
-(0, _REGISTER) -> 2
+(0, TYPE_REGISTER) -> 2
 (0, TYPE_LABEL) -> 2
 (0, TYPE_NUM) -> 1
 (2, "!") -> 1
