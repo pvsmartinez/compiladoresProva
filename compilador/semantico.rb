@@ -33,6 +33,7 @@ class Semantico
 
   def print_memory
     @lambda_machine.print_mem
+    puts 'compiled'
   end
 
   private

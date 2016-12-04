@@ -17,7 +17,7 @@ class Lambda_Machine
   VALUE = 255
 
   def print_mem
-    @mem[256..-1].each_with_index {|mem_pos, index| puts '[' + (VALUE + index + 1).to_s + '] ' + mem_pos.to_s }
+    @mem[256..-1].each_with_index {|mem_pos, index| puts (VALUE + index + 1).to_s + ': ' + mem_pos.to_s }
   end
 
   def create_mem

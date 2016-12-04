@@ -9,11 +9,11 @@ class Sintatico
 
   def initialize(lexico)
 
-    puts ''
-    puts '=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='
-    puts '- A N A L I S A D O R   S I N T A T I C O -'
-    puts '=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='
-    puts ''
+    # puts ''
+    # puts '=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='
+    # puts '- A N A L I S A D O R   S I N T A T I C O -'
+    # puts '=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='
+    # puts ''
 
     @lexico = lexico
     @semantico = Semantico.new(@lexico)
@@ -34,7 +34,8 @@ class Sintatico
       next_state(token)
       @semantico.semantic_action(token, index)
     end
-    puts @lexico.labels.to_s 
+    # puts @lexico.labels.to_s
+    puts 'compiling'
     @semantico.print_memory
     @semantico.run
   end
@@ -52,14 +53,14 @@ class Sintatico
     # puts current_state_subautomatas_terminals
 
     if current_state_terminals.include? token.lexeme
-      puts '    token: [' + token.lexeme + ']'
+      # puts '    token: [' + token.lexeme + ']'
       change_state token.lexeme
       @was_token_consumed = true
 
       return
 
     elsif current_state_terminals.include? token.type.to_s
-      puts '    token: [' + token.lexeme + ']'
+      # puts '    token: [' + token.lexeme + ']'
       change_state token.type.to_s
       @was_token_consumed = true
       return
@@ -68,7 +69,7 @@ class Sintatico
 
       current_state_subautomatas_terminals.each do |automata, terminals|
         if terminals.include?(token.lexeme) || terminals.include?(token.type.to_s)
-          puts '    token: [' + token.lexeme + ']'
+          # puts '    token: [' + token.lexeme + ']'
 
           change_state automata
           push_automata automata
@@ -141,8 +142,8 @@ class Sintatico
   def change_state(input)
     last_state = current_automata.current_state
     current_automata.current_state = current_automata.transitions[current_automata.current_state][input]
-    puts '    ' + current_automata.name + ': (' + last_state + ', ' + input + ') -> ' + current_automata.current_state
-    puts ''
+    # puts '    ' + current_automata.name + ': (' + last_state + ', ' + input + ') -> ' + current_automata.current_state
+    # puts ''
   end
 
   def current_automata
@@ -152,17 +153,17 @@ class Sintatico
   def push_automata(automata_name)
     last_automata = current_automata.name unless current_automata.nil?
     @automata_stack << @automatas[automata_name].clone
-    puts ''
-    puts 'Entrada de submaquina: [' +  current_automata.name + ']' if last_automata.nil?
-    puts 'Entrada de submaquina: [' + last_automata + ' ~> ' + current_automata.name + ']' unless last_automata.nil?
-    puts ''
+    # puts ''
+    # puts 'Entrada de submaquina: [' +  current_automata.name + ']' if last_automata.nil?
+    # puts 'Entrada de submaquina: [' + last_automata + ' ~> ' + current_automata.name + ']' unless last_automata.nil?
+    # puts ''
   end
 
   def pop_automata()
     popped_automata = @automata_stack.pop
-    puts ''
-    puts 'Saida de submaquina: [' + popped_automata.name + ' ~> ' + current_automata.name + ']'
-    puts ''
+    # puts ''
+    # puts 'Saida de submaquina: [' + popped_automata.name + ' ~> ' + current_automata.name + ']'
+    # puts ''
   end
 
   def create_automatas_from_file(filename)
