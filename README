@@ -1,0 +1,20 @@
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+| 3a  P A R T E   D A   P 2   C O M P I L A D O R E S   -   P C S 2 0 5 6 |
+=                                                                         =
+|  PEDRO VICENTE S. G. MARTINEZ (7630826)                                 |
+=  VINICIUS ADAIME A. DE MELO   (6849971)                                 =
+|                                                                         |
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+- Recomenda-se a utilização da versão 2.2.1 do Ruby
+
+- É necessário ter o java instalado, caso contrário basta comentar as linhas
+  15, 16 e 17 do arquivo 'compilar.sh'
+
+- Para executar o código basta rodar o script: ./compilar.sh
+
+- O arquivo de entrada é o ENTRADA.txt
+
+- A saída é impressa no terminal, mas caso deseje gerar um arquivo com o resultado
+  da compilação e execução do código você pode executaro comando
+  ./compilar.sh > saida.txt

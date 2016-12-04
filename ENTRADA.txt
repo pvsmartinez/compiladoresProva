@@ -1,14 +1,13 @@
-load x! 50
-add5 x
-print x
+//start of program
+print999
 
+back:
 exit
 
-x: 0
+//the declaration of the procedure
+print999:
+print 999
+back
 
-
-add5:
-add read data 5
-load instruction! add data! 1
-
+//end of program
 exit:
