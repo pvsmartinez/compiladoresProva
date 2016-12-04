@@ -36,6 +36,7 @@ class Sintatico
     end
 
     @semantico.print_memory
+    @semantico.run
   end
 
   private

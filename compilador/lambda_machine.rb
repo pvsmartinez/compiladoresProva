@@ -34,7 +34,7 @@ class Lambda_Machine
   def execute
     resetPointers
 
-    puts 'read ' + (@@mem_size - 256) + ' tokens'
+    puts 'read ' + (@@mem_size - 256).to_s + ' tokens'
 
     while get(INSTRUCTION) > 0 && get(INSTRUCTION) < @@mem_size
       printString = @mem[INSTRUCTION].to_s + ':'

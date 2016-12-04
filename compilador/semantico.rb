@@ -27,6 +27,10 @@ class Semantico
     end
   end
 
+  def run
+    @lambda_machine.execute
+  end
+
   def print_memory
     @lambda_machine.print_mem
   end
