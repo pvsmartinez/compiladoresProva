@@ -48,17 +48,21 @@ class Token
     when "EOL"
       @type = :TYPE_EOL
 
+    when "!"
+      @type = :TYPE_SPECIAL_CHARACTER
+
+    when ":"
+      @type = :TYPE_SPECIAL_CHARACTER
+
     when /^[0-9]+/
       @type = :TYPE_NUM
-
-    when "!" || ":"
-      @type = :TYPE_SPECIAL_CHARACTER
 
     when /[a-zA-Z]+/
       @type = :TYPE_LABEL
 
     else
-      puts '>> Error: Token not valid!'
+
+      puts '>> Error: Token (' + lexeme.to_s + ') not valid!'
     end
   end
 

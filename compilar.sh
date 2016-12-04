@@ -4,9 +4,9 @@ clear
 echo "Prova 2 - Compiladores - Dezembro de 2016"
 echo "   Pedro Martinez e Vinicius Adaime"
 
-echo "\n\nPrograma exemplo (programa.txt)"
+echo "\n\nPrograma exemplo (ENTRADA.txt)"
 echo "-------------------------------"
-more programa.txt
+more ENTRADA.txt
 
 echo "\n\nCompilando programa exemplo"
 echo "---------------------------"
@@ -14,4 +14,4 @@ compilador/main.rb
 
 echo "\n\nComparando com o compilador exemplo!"
 echo "------------------------------------"
-java Lambda programa.txt
+java Lambda ENTRADA.txt

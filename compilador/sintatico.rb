@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'automata'
+require_relative 'semantico'
 
 class Sintatico
 
@@ -15,6 +16,8 @@ class Sintatico
     puts ''
 
     @lexico = lexico
+    @semantico = Semantico.new(@lexico)
+
     @automata_stack = [] #Array com os automatos
     @subautomatas_terminals = {}
     create_automatas_from_file "compilador/automatos.txt"
@@ -26,12 +29,13 @@ class Sintatico
     # current_state_subautomatas_terminals
     # puts @subautomatas_terminals
 
-    @lexico.tokens.each do |token|
+    @lexico.tokens.each_with_index do |token, index|
       @was_token_consumed = false
-
       next_state(token)
-
+      @semantico.semantic_action(token, index)
     end
+
+    @semantico.print_memory
   end
 
   private
@@ -50,6 +54,7 @@ class Sintatico
       puts '    token: [' + token.lexeme + ']'
       change_state token.lexeme
       @was_token_consumed = true
+
       return
 
     elsif current_state_terminals.include? token.type.to_s

@@ -1,53 +1,58 @@
 #!/usr/bin/env ruby
 
-require_relative 'sintatico'
-
 class Lambda_Machine
 
-  MEM_SIZE = 256
+  @@mem_size = 256
 
-  NOP = 0
-  READ = 1
-  LOAD = 2
-  ADD = 3
+  NOP   = 0
+  READ  = 1
+  LOAD  = 2
+  ADD   = 3
   PRINT = 4
 
   INSTRUCTION = 32
-  DATA = 34
-  RESULT = 36
+  DATA        = 34
+  RESULT      = 36
 
   VALUE = 255
 
-  def createMem
-    @mem[0..MEM_SIZE] = 0
+  def print_mem
+    @mem[256..-1].each_with_index {|mem_pos, index| puts '[' + (VALUE + index + 1).to_s + '] ' + mem_pos.to_s }
   end
 
-  def addToken(value)
-    @mem[MEM_SIZE] = value
-    MEM_SIZE ++
+  def create_mem
+    @mem = []
+    @mem[0..@@mem_size] = 0
+
+  end
+
+  def add_token(value)
+    @mem[@@mem_size] = value
+    @@mem_size += 1
   end
 
   def execute
     resetPointers
 
-    puts 'read ' + (MEM_SIZE - 256) + ' tokens'
+    puts 'read ' + (@@mem_size - 256) + ' tokens'
 
-    while get(INSTRUCTION) > 0 && get(INSTRUCTION) < MEM_SIZE
+    while get(INSTRUCTION) > 0 && get(INSTRUCTION) < @@mem_size
       printString = @mem[INSTRUCTION].to_s + ':'
       readInstruction
       puts printString
     end
 
-    if get(INSTRUCTION) >= MEM_SIZE
+    if get(INSTRUCTION) >= @@mem_size
       puts 'INFINITY; ready.'
     else
       puts 'ready.'
+    end
   end
 
   private
 
   def get(address)
-    return @mem[address]
+    @mem[address]
   end
 
   def put(address, value)
@@ -121,20 +126,20 @@ class Lambda_Machine
   end
 
   def nextInstruction
-    @mem[INSTRUCTION] ++;
+    @mem[INSTRUCTION] += 1
   end
 
   def resetPointers
-    @mem[INSTRUCTION] = 256;
-    @mem[INSTRUCTION+1] = VALUE;
-    @mem[DATA+1] = VALUE;
-    @mem[RESULT+1] = VALUE;
+    @mem[INSTRUCTION] = 256
+    @mem[INSTRUCTION+1] = VALUE
+    @mem[DATA+1] = VALUE
+    @mem[RESULT+1] = VALUE
 
-    @mem[RESULT+2] = LOAD;
-    @mem[RESULT+3] = INSTRUCTION;
-    @mem[RESULT+4] = VALUE;
-    @mem[RESULT+5] = 0;
-    @mem[RESULT+6] = VALUE; #exit
+    @mem[RESULT+2] = LOAD
+    @mem[RESULT+3] = INSTRUCTION
+    @mem[RESULT+4] = VALUE
+    @mem[RESULT+5] = 0
+    @mem[RESULT+6] = VALUE #exit
   end
 
 end

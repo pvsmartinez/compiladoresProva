@@ -5,12 +5,14 @@ require_relative 'token'
 class Lexico
 
   attr_reader :tokens
+  attr_reader :labels
 
   def initialize(input_file_name)
 
     @tokens = []
     @labels = {}
     base_address = 256
+    address_deslocation = 1
 
     puts ''
     puts '=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='
@@ -27,23 +29,37 @@ class Lexico
       words.each do | word | #cria cada token
 
         if word.match /(:)$/
-          @labels[word[0..-2]] = base_address + @tokens.length
+          @labels[word[0..-2]] = base_address + address_deslocation
           puts ' (r) token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[0..-2] + ')'
           @tokens << Token.new(word[0..-2])
+          # address_deslocation += 1
+
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[-1] + ')'
           @tokens << Token.new(word[-1])
+          # address_deslocation += 1
 
         elsif word.match /(!)$/
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[0..-2] + ')'
           @tokens << Token.new(word[0..-2])
+          address_deslocation += 1
+
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word[-1] + ')'
           @tokens << Token.new(word[-1])
+          address_deslocation += 1
+
+        elsif word.match /^[0-9]$/
+
+          puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word + ')'
+          @tokens << Token.new(word)
+          address_deslocation += 2
 
         else
           puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: ' + word + ')'
           @tokens << Token.new(word)
+          address_deslocation += 1
         end
       end
+
       puts '     token: (pos: ' + (base_address + @tokens.length).to_s  + ', lexeme: EOL)'
       @tokens << Token.new("EOL")
     end
