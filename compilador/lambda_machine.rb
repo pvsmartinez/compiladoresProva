@@ -34,12 +34,13 @@ class Lambda_Machine
   def execute
     resetPointers
 
-    puts 'read ' + (@@mem_size - 256).to_s + ' tokens'
+    puts 'read ' + (@@mem_size - 255).to_s + ' tokens'
+    puts 'executing'
 
     while get(INSTRUCTION) > 0 && get(INSTRUCTION) < @@mem_size
-      printString = @mem[INSTRUCTION].to_s + ':'
+      @printString = @mem[INSTRUCTION].to_s + ':'
       readInstruction
-      puts printString
+      puts @printString
     end
 
     if get(INSTRUCTION) >= @@mem_size
@@ -62,59 +63,62 @@ class Lambda_Machine
   def readInstruction
     opcode = get(@mem[INSTRUCTION])
 
+    if opcode.nil?
+      opcode = NOP
+    end
+
     if get(@mem[INSTRUCTION] + 1) == VALUE
       # its a value
       @mem[RESULT] = opcode
-      printString += ' ' + @mem[RESULT].to_s
-      nextInstruction
-      nextInstruction
+      @printString += ' ' + @mem[RESULT].to_s
+      nextInstruction 2
       return
     end
 
     case opcode
     when NOP
-      printString += ' NOP'
+      @printString += ' nop'
       nextInstruction
     when READ
-      printString += ' (read'
-      @mem[RESULT] = readParam
-      printString += ')'
+      @printString += ' (read'
+      @mem[RESULT] = get readParam
+      @printString += ')'
     when LOAD
-      printString += ' load ('
+      @printString += ' load ('
       address = readParam
-      printString += ') ('
-      value = readParam
-      printString += ')'
+      @printString += ') ('
+      value = readSecondParam
+      @printString += ')'
       puts '[' + address.to_s + ']<--' + value.to_s
-      put address value
+      put(address, value)
     when ADD
-      printString += ' add ('
+      @printString += ' add ('
       address = readParam
-      printString += ') ('
-      value = readParam
-      printString += ')'
+      @printString += ') ('
+      value = readSecondParam
+      @printString += ')'
       puts '[' + address.to_s + ']+=' + value.to_s
       sum = get(address) + value
-      put address sum
+      put(address, sum)
       @mem[RESULT] = get(address)
     when PRINT
-      printString += ' print'
+      @printString += ' print'
       value = readParam
-      puts '-->' + value
+      puts '-->' + value.to_s
     else
       if get(opcode + 1) == VALUE
         #variable
-        printString += ' read ' + opcode
+        @printString += ' read ' + opcode.to_s
         @mem[RESULT] = get(opcode)
         nextInstruction
       else
         #jump
-        printString += ' jump ' + opcode
+        @printString += ' jump ' + opcode.to_s
         @mem[DATA] = @mem[INSTRUCTION] + 1
         @mem[INSTRUCTION] = opcode
-        printString += ' ('
+        @printString += ' ('
         readInstruction
-        printString += ')'
+        @printString += ')'
       end
     end
   end
@@ -122,11 +126,16 @@ class Lambda_Machine
   def readParam
     nextInstruction
     readInstruction
-    get @mem[RESULT]
+    get RESULT
   end
 
-  def nextInstruction
-    @mem[INSTRUCTION] += 1
+  def readSecondParam
+    readInstruction
+    get RESULT
+  end
+
+  def nextInstruction(steps = 1)
+    @mem[INSTRUCTION] += steps
   end
 
   def resetPointers
