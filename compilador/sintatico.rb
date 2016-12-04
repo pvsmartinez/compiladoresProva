@@ -34,7 +34,7 @@ class Sintatico
       next_state(token)
       @semantico.semantic_action(token, index)
     end
-
+    puts @lexico.labels.to_s 
     @semantico.print_memory
     @semantico.run
   end
